@@ -12,53 +12,79 @@ class BitcoinExchange{
     private:
         std::map<std::string, double> data;
         void ReadData();
-        bool ValidateDate(std::string& s);
-        bool ValidatePrice(std::string& s);
+        void ValidateDate(std::string& s);
+        void ValidatePrice(std::string& s);
         void ValidateValue(std::string &Value);
+        void StartProcess(const char* InputFile);
     public:
-        BitcoinExchange(std::string &InputFile);
+        BitcoinExchange();
+        BitcoinExchange(const char* InputFile);
         BitcoinExchange(const BitcoinExchange &other);
         BitcoinExchange &operator=(const BitcoinExchange &other);
         ~BitcoinExchange();
 
-        void    StratProcess(std::string &InputFile);
+        void    ValidateInputFile(const char *InputFile);
+        void    StratProcess(const char *InputFile);
         void    trimData(std::string &s);
-        // const std::map<std::string, double> &getData() const;
-        
+        void    PrintData(std::string &date, std::string &Value);
         class CantOpenFile: public std::exception{
             public:
                 virtual const char *what() const throw(){
-                    return ("could not open file.");
+                    return ("Error: could not open file.");
+                }
+        };
+        class NonValidInputFile: public std::exception{
+            public:
+                virtual const char *what() const throw(){
+                    return ("Error: the file should file.txt.");
                 }
         };
         class InvalidFileFormat: public std::exception{
             public:
                 virtual const char *what() const throw(){
-                    return ("Invalid File Format");
+                    return ("Error: Invalid File Format");
                 }
         };
         class InvalidDate: public std::exception{
             public:
                 virtual const char *what() const throw(){
-                    return ("Invalid Date Expected : 'YYYY-MM-DD'");
+                    return ("Error: Invalid Date Expected : 'YYYY-MM-DD'");
                 }
         };
         class InvalidPrice: public std::exception{
             public:
                 virtual const char *what() const throw(){
-                    return ("Invalid Date Expected  a Valide Number");
+                    return ("Error: Invalid Date Expected  a Valide Number");
                 }
         };
         class InvalidHeader: public std::exception{
             public:
                 virtual const char *what() const throw(){
-                    return ("Invalid Header Expected : date,exchange_rate");
+                    return ("Error: Invalid Header Expected : date,exchange_rate");
                 }
         };
         class NoDataAvaliable: public std::exception{
             public:
                 virtual const char *what() const throw(){
-                    return ("No Data Loaded");
+                    return ("Error: No Data Loaded");
+                }
+        };
+        class NegativeValue: public std::exception{
+            public:
+                virtual const char *what() const throw(){
+                    return ("Error: not a positive number.");
+                }
+        };
+        class TooLargeValue: public std::exception{
+            public:
+                virtual const char *what() const throw(){
+                    return ("Error: too large a number.");
+                }
+        };
+        class InvalidValue: public std::exception{
+            public:
+                virtual const char *what() const throw(){
+                    return ("Error: too large a number.");
                 }
         };
 };

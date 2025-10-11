@@ -1,7 +1,9 @@
 #include "BitcoinExchange.hpp"
 
+BitcoinExchange::BitcoinExchange(){}
 
-BitcoinExchange::BitcoinExchange(std::string &InputFile){
+BitcoinExchange::BitcoinExchange(const char* InputFile){
+    ValidateInputFile(InputFile);
     ReadData();
     StartProcess(InputFile);
 }
@@ -22,10 +24,15 @@ BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& other){
 
 BitcoinExchange::~BitcoinExchange(){}
 
-
-// std::map<std::string, double> const &BitcoinExchange::getData() const{
-//     return data;
-// }
+void    BitcoinExchange::ValidateInputFile(const char *InputFile){
+    if (!InputFile)
+        throw NonValidInputFile();
+    int i = 0;
+    while (InputFile[i] != 0) i++;
+    i--;
+    if (InputFile[i--] != 't' || InputFile[i--] != 'x' || InputFile[i--] != 't' || InputFile[i] != '.')
+        throw NonValidInputFile();
+}
 
 void    BitcoinExchange::trimData(std::string &s){
     size_t start = s.find_first_not_of(" \t\r\n");
@@ -35,7 +42,7 @@ void    BitcoinExchange::trimData(std::string &s){
     else
         s = s.substr(start, end-start+1);
 }
-bool BitcoinExchange::ValidateDate(std::string& date){
+void BitcoinExchange::ValidateDate(std::string& date){
     if (date.length() != 10 || date[4] != '-' || date[7] != '-')
         throw InvalidDate();
     for (size_t i(0);i < date.size();i++){
@@ -46,7 +53,7 @@ bool BitcoinExchange::ValidateDate(std::string& date){
     }
 }
 
-bool BitcoinExchange::ValidatePrice(std::string& price){
+void BitcoinExchange::ValidatePrice(std::string& price){
     int floatingPoint = 0;
     for (size_t i(0); i < price.size(); i++){
         if (price[i] == '.'){
@@ -60,9 +67,17 @@ bool BitcoinExchange::ValidatePrice(std::string& price){
     }
 }
 
-void ValidateValue(std::string &Value){
-    
+void BitcoinExchange::ValidateValue(std::string &Value){
+    std::stringstream s(Value);
+    double v;
+    if (!(s >> v))
+        throw InvalidValue();
+    if (v < 0)
+        throw NegativeValue();
+    if (v > 1000)
+        throw TooLargeValue();
 }
+
 void    BitcoinExchange::ReadData(){
     std::ifstream datafile;
     datafile.open("data.csv", std::ios_base::in);
@@ -82,7 +97,8 @@ void    BitcoinExchange::ReadData(){
         std::string price = line.substr(pos+1);
         trimData(date);
         trimData(price);
-        (ValidateDate(date) && !ValidatePrice(price));
+        ValidateDate(date);
+        ValidatePrice(price);
         double i = 0;
         std::stringstream s(price);
         if (!(s >> i)) {
@@ -97,7 +113,28 @@ void    BitcoinExchange::ReadData(){
         throw NoDataAvaliable();
 }
 
-void    BitcoinExchange::StratProcess(std::string& InputFile){
+void    BitcoinExchange::PrintData(std::string &date, std::string &Value){
+    std::stringstream s(Value);
+    double v ;
+    s >> v;
+    std::string output;
+    double FinalV = -1;
+    std::map<std::string, double>::iterator it = data.upper_bound(date);
+    output = date + " => " + Value + " = " ;
+    if (it == data.begin())
+        output = "Error: no earlier date available for " + date;
+    else{
+        if (it->first == date);
+        else    it--;
+        FinalV = (v * it->second);      
+    }
+    std::cout << output;
+    if (FinalV != -1)
+        std::cout << FinalV;
+    std::cout << std::endl;
+}
+
+void    BitcoinExchange::StartProcess(const char* InputFile){
     std::ifstream Ifile;
     Ifile.open(InputFile, std::ios_base::in);
     if (!Ifile.is_open())
@@ -108,13 +145,21 @@ void    BitcoinExchange::StratProcess(std::string& InputFile){
             continue;
         size_t pos = line.find('|');
         if (pos == std::string::npos){
-            std::cout << "Error: bad input => <" << line << ">" << std::endl;
+            std::cout << "Error: bad input => " << line << std::endl;
             continue;
         }
         std::string date = line.substr(0, pos);
         std::string Value = line.substr(pos+1);
-        (ValidateDate && ValidateValue());
-
-
+        try{
+            trimData(date);
+            trimData(Value);
+            ValidateDate(date);
+            ValidateValue(Value);
+            PrintData(date, Value);
+        }
+        catch(std::exception& e){
+            std::cout << e.what() << std::endl;
+            continue;
+        }
     }
 }
