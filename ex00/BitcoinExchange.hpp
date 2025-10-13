@@ -15,16 +15,16 @@ class BitcoinExchange{
         void ValidateDate(std::string& s);
         void ValidatePrice(std::string& s);
         void ValidateValue(std::string &Value);
-        void StartProcess(const char* InputFile);
+        void StartProcess(const std::string &InputFile);
     public:
         BitcoinExchange();
-        BitcoinExchange(const char* InputFile);
+        BitcoinExchange(const std::string &InputFile);
         BitcoinExchange(const BitcoinExchange &other);
         BitcoinExchange &operator=(const BitcoinExchange &other);
         ~BitcoinExchange();
 
-        void    ValidateInputFile(const char *InputFile);
-        void    StratProcess(const char *InputFile);
+        void    ValidateInputFile(const std::string &InputFile);
+        void    StratProcess(const std::string &InputFile);
         void    trimData(std::string &s);
         void    PrintData(std::string &date, std::string &Value);
         class CantOpenFile: public std::exception{

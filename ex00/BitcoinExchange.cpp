@@ -2,7 +2,7 @@
 
 BitcoinExchange::BitcoinExchange(){}
 
-BitcoinExchange::BitcoinExchange(const char* InputFile){
+BitcoinExchange::BitcoinExchange(const std::string &InputFile){
     ValidateInputFile(InputFile);
     ReadData();
     StartProcess(InputFile);
@@ -24,12 +24,11 @@ BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& other){
 
 BitcoinExchange::~BitcoinExchange(){}
 
-void    BitcoinExchange::ValidateInputFile(const char *InputFile){
-    if (!InputFile)
+void    BitcoinExchange::ValidateInputFile(const std::string &InputFile){
+    if (InputFile.empty())
         throw NonValidInputFile();
-    int i = 0;
-    while (InputFile[i] != 0) i++;
-    i--;
+    size_t i = 0;
+    while (i < InputFile.size()-1) i++;
     if (InputFile[i--] != 't' || InputFile[i--] != 'x' || InputFile[i--] != 't' || InputFile[i] != '.')
         throw NonValidInputFile();
 }
@@ -134,9 +133,9 @@ void    BitcoinExchange::PrintData(std::string &date, std::string &Value){
     std::cout << std::endl;
 }
 
-void    BitcoinExchange::StartProcess(const char* InputFile){
+void    BitcoinExchange::StartProcess(const std::string &InputFile){
     std::ifstream Ifile;
-    Ifile.open(InputFile, std::ios_base::in);
+    Ifile.open(InputFile.c_str(), std::ios_base::in);
     if (!Ifile.is_open())
         throw CantOpenFile();
     std::string line;

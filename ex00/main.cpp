@@ -2,10 +2,10 @@
 
 int main(int ac, char **av)
 {
-    // (void**) av;
     if (ac == 2){
+        const std::string s(av[1]);
         try{
-            BitcoinExchange B(av[1]);
+            BitcoinExchange B(s);
         }
         catch(std::exception& e){
             std::cout << e.what() << std::endl;
