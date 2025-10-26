@@ -2,13 +2,13 @@ NAME=RPN
 
 CC= c++ 
 
-CPPFLAGS= -std=c++98 -Wall -Wextra -Werror 
+CPPFLAGS= -Wall -Wextra -Werror -fsanitize=address -g3
 
-SRC= main.cpp RPN.cpp
+SRC= main.cpp PmergeMe.cpp
 
-OBJ= main.o RPN.o
+OBJ= main.o PmergeMe.o
 
-HEADER= RPN.hpp
+HEADER= PmergeMe.hpp
 
 all: $(NAME)
 
