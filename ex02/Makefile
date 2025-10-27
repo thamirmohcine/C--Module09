@@ -1,8 +1,8 @@
-NAME=RPN
+NAME=PmergeMe
 
 CC= c++ 
 
-CPPFLAGS= -Wall -Wextra -Werror -fsanitize=address -g3
+CPPFLAGS= -std=c++98 -Wall -Wextra -Werror
 
 SRC= main.cpp PmergeMe.cpp
 

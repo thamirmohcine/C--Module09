@@ -5,12 +5,16 @@
 #include <algorithm>
 #include <sstream>
 #include <vector>
+#include <deque>
+#include <iomanip>
+#include <ctime>
 #include <climits>
 
 
 class PmergeMe{
     private:
         std::vector<int > seq;
+        std::deque<int > deque_seq;
     
     public:
         PmergeMe();
@@ -25,6 +29,15 @@ class PmergeMe{
         int                                 trim_StrToNumber(const std::string& s);
         std::vector<int>                    StartSorting(std::vector<int> Numlist);
         std::vector<std::pair<int , int> >  makePairs(std::vector<int> Numlist); 
+
+        double                              getTimeUs();
+
+
+        std::deque<int >                    GenerateIndicesForDq(std::deque<int > JkSeq, size_t size);
+        std::deque<int >                    GenerateJacobSthalSeqForDq(size_t PendSeqSize);
+        void                                TakeDqSequence(const char **args, size_t seqSize);
+        std::deque<int>                     StartSortingForDq(std::deque<int> Numlist);
+        std::deque<std::pair<int , int> >   makePairsForDq(std::deque<int> Numlist); 
 
         class NonNumberArgument: public std::exception{
             public:

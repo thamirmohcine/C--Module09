@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
+#include <algorithm>
 
 class BitcoinExchange{
     private:
@@ -24,7 +25,7 @@ class BitcoinExchange{
         ~BitcoinExchange();
 
         void    ValidateInputFile(const std::string &InputFile);
-        void    StratProcess(const std::string &InputFile);
+        // void    StratProcess(const std::string &InputFile);
         void    trimData(std::string &s);
         void    PrintData(std::string &date, std::string &Value);
         class CantOpenFile: public std::exception{
@@ -84,7 +85,7 @@ class BitcoinExchange{
         class InvalidValue: public std::exception{
             public:
                 virtual const char *what() const throw(){
-                    return ("Error: too large a number.");
+                    return ("Error: Invalid Number.");
                 }
         };
 };

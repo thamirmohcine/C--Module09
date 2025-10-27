@@ -26,9 +26,9 @@ int RPN::TopPop(){
 }
 
 void    RPN::CaluculePush(char op){
-    int b = TopPop();
-    int a = TopPop();
-    int result = 0;
+    double b = TopPop();
+    double a = TopPop();
+    double result = 0;
     switch(op){
         case '+':
             result = (a + b); break;
@@ -42,6 +42,8 @@ void    RPN::CaluculePush(char op){
             result = (a / b); break;
         }
     }
+    if (result > INT_MAX || result < INT_MIN)
+        throw ResultOverflow();
     s.push(result);
 }
 

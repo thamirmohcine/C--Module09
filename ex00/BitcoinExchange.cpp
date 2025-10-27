@@ -50,6 +50,18 @@ void BitcoinExchange::ValidateDate(std::string& date){
         if (!std::isdigit(date[i]))
             throw InvalidDate();
     }
+    std::replace(date.begin(), date.end(), '-', ' ');
+    std::stringstream ss(date);
+    int year = 0;
+    int month = 0;
+    int day = 0;
+    ss >>  year >> month >> day ;
+    int Max_d_m[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+        Max_d_m[2] = 29;
+    if ((year > 9999 || year < 1000 || month < 1 || month > 12 || day < 1 || day > Max_d_m[month])){
+        throw InvalidDate();
+    }
 }
 
 void BitcoinExchange::ValidatePrice(std::string& price){
@@ -67,6 +79,17 @@ void BitcoinExchange::ValidatePrice(std::string& price){
 }
 
 void BitcoinExchange::ValidateValue(std::string &Value){
+    int floatingPoint = 0;
+    for (size_t i(0); i < Value.size(); i++){
+        if (Value[i] == '.'){
+            if (i == 0 || i == Value.size()-1 || floatingPoint)
+                throw InvalidValue();
+            floatingPoint++;
+            continue;
+        }
+        if (!std::isdigit(Value[i]))
+            throw InvalidValue();
+    }
     std::stringstream s(Value);
     double v;
     if (!(s >> v))

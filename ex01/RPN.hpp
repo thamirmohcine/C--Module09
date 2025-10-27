@@ -4,11 +4,12 @@
 
 #include <iostream>
 #include <stack>
+#include <climits>
 
 
 class RPN{
     private:
-        std::stack<int> s;
+        std::stack<double> s;
     public:
         RPN();
         RPN(const std::string &PostfixExpression);
@@ -38,6 +39,12 @@ class RPN{
             public:
                 const char *what() const throw(){
                     return ("Exception A Devision By Zero Occure.");
+                }
+        };
+        class ResultOverflow : public std::exception{
+            public:
+                const char *what() const throw(){
+                    return ("Exception A Overflowed Result.");
                 }
         };
 };
